@@ -39,7 +39,7 @@ const objMsg = {
     errBirthYoung: "Vous devez être majeur pour participer",
     errQty: "Vous devez indiquer un chiffre entre 0 et 100",
     errCities: "Vous devez sélectionner une ville",
-    errCgu: "Vous devez accepter les CGUs",
+    errCgu: "Vous devez accepter les termes et conditions",
 }
 // Expression reguliere pour les tests
 const rgxName = /^[a-zA-ZÀ-ÖØ-öøç]{2,15}[-]{0,1}[a-zA-ZÀ-ÖØ-öøç]{0,15}$/ // Nom et Prenom
