@@ -22,11 +22,11 @@ const inputLast = document.getElementById("last")
 const inputEmail = document.getElementById("email")
 const inputBirth = document.getElementById("birthdate")
 const inputQuantity = document.getElementById("quantity")
-const inputRadio = document.querySelectorAll("input[type='radio'")
+const inputRadio = document.querySelectorAll("input[type='radio']")
 const inputCgu = document.getElementById("checkbox1")
 const inputNews = document.getElementById("checkbox2")
     //other
-const formElem = document.querySelector("form[name='reserve'")    
+const formElem = document.querySelector("form[name='reserve']")    
 
 //---------------------------------------------------------------------
 // Constantes
@@ -64,7 +64,7 @@ modalBtnClose.addEventListener("click", closeModal)
 inputFirst.addEventListener("input",() => isValidInput(inputFirst, objMsg.errName, rgxName))
 inputLast.addEventListener("input",() => isValidInput(inputLast, objMsg.errName, rgxName))
 inputEmail.addEventListener("input",() => isValidInput(inputEmail, objMsg.errEmail, rgxEmail))
-inputBirth.addEventListener("input",() => isValidBirth(inputBirth, objMsg))
+inputBirth.addEventListener("change",() => isValidBirth(inputBirth, objMsg))
 inputQuantity.addEventListener("input",() => isValidInput(inputQuantity, objMsg.errQty, rgxQty))
 inputRadio.forEach((el) => el.addEventListener("change", () => isCitiesCheck(el,objMsg.errCities, inputRadio)))
 inputCgu.addEventListener("change", () => isValidCgu(inputCgu, objMsg.errCgu))
@@ -80,12 +80,10 @@ function validate(){
     let isValidEmailR = isValidInput(inputEmail, objMsg.errEmail, rgxEmail)
     let isValidBirthR = isValidBirth(inputBirth, objMsg)
     let isValidQuantityR = isValidInput(inputQuantity, objMsg.errQty, rgxQty)
-    //let isValidCitieR = getCheckedRadioValue(inputRadio,objMsg.errCities) //WTF undefined
+    let isValidCitieR = getCheckedRadioValue(inputRadio,objMsg.errCities)
     let isValidCguR = isValidCgu(inputCgu, objMsg.errCgu)
-    //console.log("--Debug 'isValidCitieR' at validate() => "+isValidCitieR)
 
-    //if(isValidFirstR && isValidLastR && isValidEmailR && isValidBirthR && isValidQuantityR && isValidCitieR && isValidCguR){
-    if(isValidFirstR && isValidLastR && isValidEmailR && isValidBirthR && isValidQuantityR && isValidCguR){
+    if(isValidFirstR && isValidLastR && isValidEmailR && isValidBirthR && isValidQuantityR && isValidCitieR && isValidCguR){
       return true
     }
     return false
@@ -97,7 +95,7 @@ function validate(){
 btnSubmit.addEventListener("click",(e)=>{
     e.preventDefault()    
     if(validate()){
-        //console.log("--Debug validate() TRUE")
+        console.log("--Debug validate() TRUE")
         //alors on peut valider le formulaire
         // on récupère les valeur pour le traitement futur.
         
@@ -105,7 +103,9 @@ btnSubmit.addEventListener("click",(e)=>{
         
         // on ferme le modal avec un délai
         
-    }
+    }else{
+        console.log("--Debug validate() FALSE")
+    }    
 })
 
 

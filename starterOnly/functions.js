@@ -1,6 +1,6 @@
 // DOM Elements
 const modalbg = document.querySelector(".bground");
-
+const radioBox = document.getElementById("container-checkbox")
 
 //edit nav
 
@@ -49,8 +49,15 @@ export function closeModal() {
  * @param {string} msg => message adapte a l'element concernant l'erreur de remplissage
  */
 function setErrMsg(elem, msg){
+  //console.log(elem)
+  if(elem.id === "container-checkbox"){
+    elem.dataset.errorVisible = true
+    elem.dataset.error = msg
+    return true
+  }
   elem.parentElement.dataset.errorVisible = true
   elem.parentElement.dataset.error = msg
+  return true
 }
 
 /**
@@ -59,8 +66,14 @@ function setErrMsg(elem, msg){
  * @param {DOMElement} elem => element du dom concerne
  */
 function rmErrMsg(elem){
+  if(elem.id === "container-checkbox"){
+    elem.removeAttribute('data-error-visible')
+    elem.removeAttribute('data-error')
+    return true
+  }
   elem.parentElement.removeAttribute('data-error-visible')
   elem.parentElement.removeAttribute('data-error')
+  return true  
 }
 
 /**
@@ -125,11 +138,12 @@ export function isValidBirth(elem, msg){
  * @return {boolean} => true, la valeur du champ correspond a la demande - false, la valeur du champ ne correspond pas a la demande
  */
 export function isCitiesCheck(elem, msg, inputs){
-  let oneChecked = Array.from(inputs).some(radioElem => radioElem.checked) // on duplique le tableau cities, puis on vérifie si au moins un elem a l'attribut checked
+  let oneChecked = Array.from(inputs).some((radioElem) => radioElem.checked) // on duplique le tableau cities, puis on vérifie si au moins un elem a l'attribut checked
   if(!oneChecked){
     setErrMsg(elem,msg)
     return false
   }
+  //console.log("--Debug isCitiesCheck() - TRUE oneChecked => "+oneChecked)
   rmErrMsg(elem)
   return true
 }
@@ -141,24 +155,18 @@ export function isCitiesCheck(elem, msg, inputs){
  * @param {string} msg => message adapte a l'element concernant l'erreur de remplissage
  * @return {boolean} ou {string} => true = un bouton coche, false = aucun bouton coche ou Une valeur = un bouton coche
  */
-export function getCheckedRadioValue(elemList,msg = ""){
-  elemList.forEach((elem)=>{
-    //console.log(elem)
-    if(elem.checked){
-        console.log("--Debug elem.checked")
-        console.log("--Debug radio checked => "+elem.value)
-        if(msg !== ""){
-          console.log("--Debug if msg !== ''")
-          rmErrMsg(elem)
-          return true
-        }
-        return elem.value
+export function getCheckedRadioValue(elem,msg){
+  //console.log({elem})
+  let result = ""
+  rmErrMsg(radioBox)
+  for (var i = 0; i < elem.length; i++) {
+    if (elem[i].checked) {
+      result = elem[i].value
+      return result
     }
-    if(msg !== ""){
-      setErrMsg(elem,msg)
-    }
-    return false
-  })
+  }
+  setErrMsg(radioBox,msg)
+  return result
 }
 
 /**
