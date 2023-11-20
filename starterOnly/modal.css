@@ -204,6 +204,23 @@ main {
   margin: 15px auto;
 }
 
+.modal-body-validate{
+  height: 100%;
+  display: flex;
+  flex-flow: column;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.valideMsgElem-validate{
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 2rem;
+  text-align: center;
+}
+
 label {
   font-family: var(--font-default);
   font-size: 17px;
@@ -338,7 +355,8 @@ input[data-error]::after {
   transform: rotate(-45deg);
 }
 .btn-submit,
-.btn-signup {
+.btn-signup,
+.btn-quit{
   background: #fe142f;
   display: block;
   margin: 0 auto;

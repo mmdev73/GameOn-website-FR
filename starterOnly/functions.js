@@ -25,9 +25,7 @@ export function editNav() {
  * 
  */
 export function launchModal() {
-    if(document.querySelector(".form-success")){ // on enleve le message de formulaire sent si il existe
-      document.querySelector(".form-success").remove()
-    }
+    document.querySelector("form[name='reserve']").style.display = 'block'
     modalbg.style.display = "block"; // on fait apparaitre le modal
 }
 
@@ -38,7 +36,9 @@ export function launchModal() {
  */
 export function closeModal() {
     modalbg.style.display = "none" // on fait disparaitre le modal
-    document.querySelector("form[name='reserve'").reset() // on reset tous les champs du formulaires
+    if(document.querySelector("form[name='reserve'")){
+      document.querySelector("form[name='reserve'").reset() // on reset tous les champs du formulaires
+    }    
 }
   
 // validation du formulaire

@@ -26,7 +26,8 @@ const inputRadio = document.querySelectorAll("input[type='radio']")
 const inputCgu = document.getElementById("checkbox1")
 const inputNews = document.getElementById("checkbox2")
     //other
-const formElem = document.querySelector("form[name='reserve']")    
+const modalBody = document.querySelector(".modal-body")
+const formElem = document.querySelector("form[name='reserve']")   
 
 //---------------------------------------------------------------------
 // Constantes
@@ -95,17 +96,45 @@ function validate(){
 btnSubmit.addEventListener("click",(e)=>{
     e.preventDefault()    
     if(validate()){
-        console.log("--Debug validate() TRUE")
+        //console.log("--Debug validate() TRUE")
         //alors on peut valider le formulaire
         // on récupère les valeur pour le traitement futur.
-        
+        let cityChecked = getCheckedRadioValue(inputRadio)
+        const objResponse = {
+            first:inputFirst.value,
+            last:inputLast.value,
+            email:inputEmail.value,
+            birth:inputBirth.value,
+            qty:Number(inputQuantity.value),
+            city:cityChecked,
+            cgu:inputCgu.checked,
+            newEvent:inputNews.checked
+        }
+        console.log(objResponse)
         // on affiche l'information au client sur la validation du formulaire
         
-        // on ferme le modal avec un délai
+        let modalH = modalBody.offsetHeight        
+        modalBody.setAttribute("style", "height:"+modalH+"px")
+        formElem.style.display = 'none'
+
+        let validMsgBox = document.createElement("div")
+        let valideMsgElem = document.createElement("p")
+        let btnQuit = document.createElement("button")
+
+        validMsgBox.classList.add("modal-body-validate")
+        valideMsgElem.innerHTML = "Merci pour<br>votre inscription"
+        valideMsgElem.classList.add("valideMsgElem-validate")
+        btnQuit.innerText = "Fermer"
+        btnQuit.classList.add("button","btn-quit")
         
-    }else{
-        console.log("--Debug validate() FALSE")
-    }    
+        validMsgBox.appendChild(valideMsgElem)
+        validMsgBox.appendChild(btnQuit)
+        modalBody.appendChild(validMsgBox)
+        // on ferme le modal à la croix (deja prevu), au click sur le nouveau bouton fermer ou avec un délai
+        btnQuit.addEventListener("click", closeModal)
+        setTimeout(closeModal, 10000)
+        
+    }  
 })
 
 
