@@ -1,3 +1,8 @@
+import{
+    objForm,
+    objMsg
+} from './class.js'
+
 import {
     editNav,
     launchModal,
@@ -9,6 +14,7 @@ import {
     getCheckedRadioValue
 } from './functions.js'
 
+export let tmOut
 //---------------------------------------------------------------------
 // DOM Elements
 //---------------------------------------------------------------------
@@ -32,16 +38,7 @@ const formElem = document.querySelector("form[name='reserve']")
 //---------------------------------------------------------------------
 // Constantes
 //---------------------------------------------------------------------
-// Objet contenant les messages d'erreur
-const objMsg = {
-    errName: "Doit comporter entre 2 et 31 caractères. Lettres (avec accents) et trait d'union sont acceptés",
-    errEmail: "L'email semble invalide",
-    errBirth: "La date semble incorrecte",
-    errBirthYoung: "Vous devez être majeur pour participer",
-    errQty: "Vous devez indiquer un chiffre entre 0 et 100",
-    errCities: "Vous devez sélectionner une ville",
-    errCgu: "Vous devez accepter les termes et conditions",
-}
+
 // Expression reguliere pour les tests
 const rgxName = /^[a-zA-ZÀ-ÖØ-öøç]{2,15}[-]{0,1}[a-zA-ZÀ-ÖØ-öøç]{0,15}$/ // Nom et Prenom
 const rgxEmail = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/ //Email
@@ -63,9 +60,9 @@ modalBtnClose.addEventListener("click", closeModal)
 
 // event input validation form
 inputFirst.addEventListener("input",() => isValidInput(inputFirst, objMsg.errName, rgxName))
-inputLast.addEventListener("input",() => isValidInput(inputLast, objMsg.errName, rgxName))
+inputLast.addEventListener("input",() => isValidInput(inputLast, objMsg.errNameLast, rgxName))
 inputEmail.addEventListener("input",() => isValidInput(inputEmail, objMsg.errEmail, rgxEmail))
-inputBirth.addEventListener("change",() => isValidBirth(inputBirth, objMsg))
+inputBirth.addEventListener("focusout",() => isValidBirth(inputBirth, objMsg))
 inputQuantity.addEventListener("input",() => isValidInput(inputQuantity, objMsg.errQty, rgxQty))
 inputRadio.forEach((el) => el.addEventListener("change", () => isCitiesCheck(el,objMsg.errCities, inputRadio)))
 inputCgu.addEventListener("change", () => isValidCgu(inputCgu, objMsg.errCgu))
@@ -75,16 +72,16 @@ inputCgu.addEventListener("change", () => isValidCgu(inputCgu, objMsg.errCgu))
  * Indique si le formulaire passe la validation ou non
  * @returns {boolean} => true = validation OK, false = validation NOT OK
  */
-function validate(){      
-    let isValidFirstR = isValidInput(inputFirst, objMsg.errName, rgxName)
-    let isValidLastR = isValidInput(inputLast, objMsg.errName, rgxName)
-    let isValidEmailR = isValidInput(inputEmail, objMsg.errEmail, rgxEmail)
-    let isValidBirthR = isValidBirth(inputBirth, objMsg)
-    let isValidQuantityR = isValidInput(inputQuantity, objMsg.errQty, rgxQty)
-    let isValidCitieR = getCheckedRadioValue(inputRadio,objMsg.errCities)
-    let isValidCguR = isValidCgu(inputCgu, objMsg.errCgu)
+function validate(){
+    isValidInput(inputFirst, objMsg.errName, rgxName)
+    isValidInput(inputLast, objMsg.errName, rgxName)
+    isValidInput(inputEmail, objMsg.errEmail, rgxEmail)
+    isValidBirth(inputBirth, objMsg)
+    isValidInput(inputQuantity, objMsg.errQty, rgxQty)
+    getCheckedRadioValue(inputRadio,objMsg.errCities)
+    isValidCgu(inputCgu, objMsg.errCgu)
 
-    if(isValidFirstR && isValidLastR && isValidEmailR && isValidBirthR && isValidQuantityR && isValidCitieR && isValidCguR){
+    if(objForm.isValid()){
       return true
     }
     return false
@@ -100,17 +97,17 @@ btnSubmit.addEventListener("click",(e)=>{
         //alors on peut valider le formulaire
         // on récupère les valeur pour le traitement futur.
         let cityChecked = getCheckedRadioValue(inputRadio)
-        const objResponse = {
-            first:inputFirst.value,
-            last:inputLast.value,
-            email:inputEmail.value,
-            birth:inputBirth.value,
-            qty:Number(inputQuantity.value),
-            city:cityChecked,
-            cgu:inputCgu.checked,
-            newEvent:inputNews.checked
-        }
-        console.log(objResponse)
+        
+        objForm.values.firstName = inputFirst.value
+        objForm.values.lastName = inputLast.value
+        objForm.values.email = inputEmail.value
+        objForm.values.birthDate = inputBirth.value
+        objForm.values.qty = Number(inputQuantity.value)
+        objForm.values.city = cityChecked
+        objForm.values.cgu = inputCgu.checked
+        objForm.values.news = inputNews.checked
+
+        console.log(objForm)
         // on affiche l'information au client sur la validation du formulaire
         
         let modalH = modalBody.offsetHeight        
@@ -132,8 +129,7 @@ btnSubmit.addEventListener("click",(e)=>{
         modalBody.appendChild(validMsgBox)
         // on ferme le modal à la croix (deja prevu), au click sur le nouveau bouton fermer ou avec un délai
         btnQuit.addEventListener("click", closeModal)
-        setTimeout(closeModal, 10000)
-        
+        tmOut = setTimeout(closeModal, 10000)        
     }  
 })
 

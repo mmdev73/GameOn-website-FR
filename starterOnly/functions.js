@@ -1,3 +1,12 @@
+import{
+  objForm,
+  objMsg
+} from './class.js'
+
+import{
+  tmOut
+} from './modal.js'
+
 // DOM Elements
 const modalbg = document.querySelector(".bground");
 const radioBox = document.getElementById("container-checkbox")
@@ -16,7 +25,8 @@ export function editNav() {
     } else {
       x.className = "topnav";
     }
-  }
+}
+
 
 // launch modal form and close modal
 /**
@@ -27,6 +37,10 @@ export function editNav() {
 export function launchModal() {
     document.querySelector("form[name='reserve']").style.display = 'block'
     modalbg.style.display = "block"; // on fait apparaitre le modal
+    if(document.querySelector(".modal-body-validate")){
+      document.querySelector(".modal-body-validate").remove()
+    }        
+    objForm.resetobj()
 }
 
 /**
@@ -36,9 +50,9 @@ export function launchModal() {
  */
 export function closeModal() {
     modalbg.style.display = "none" // on fait disparaitre le modal
-    if(document.querySelector("form[name='reserve'")){
-      document.querySelector("form[name='reserve'").reset() // on reset tous les champs du formulaires
-    }    
+    document.querySelector("form[name='reserve'").reset() // on reset tous les champs du formulaires 
+    document.querySelector(".modal-body").setAttribute("style","height: auto;")
+    clearTimeout(tmOut)
 }
   
 // validation du formulaire
@@ -85,12 +99,36 @@ function rmErrMsg(elem){
  * @return {boolean} => true, la valeur du champ correspond a la demande - false, la valeur du champ ne correspond pas a la demande
  */
 export function isValidInput(elem, msg, rgx){
+  let result = null
   if (!rgx.test(elem.value)) {
     setErrMsg(elem, msg)
-    return false
-  } 
-  rmErrMsg(elem)
-  return true
+    result = false          
+  }else{
+    rmErrMsg(elem)
+    result = true
+  }
+  switch (msg){
+    case objMsg.errName:
+      //console.log("firstName")
+      objForm.validator.firstName = result
+      break
+    case objMsg.errNameLast:
+      //console.log("lastName")
+      objForm.validator.lastName = result
+      break
+    case objMsg.errEmail:
+      //console.log("Email")
+      objForm.validator.email = result
+      break
+    case objMsg.errQty:
+      //console.log("Qty")
+      objForm.validator.qty = result
+      break
+    default:
+      break
+  }
+  //console.log({objForm})
+  return result
 }
 
 /**
@@ -101,33 +139,38 @@ export function isValidInput(elem, msg, rgx){
  * @return {boolean} => true, la valeur du champ correspond a la demande - false, la valeur du champ ne correspond pas a la demande
  */
 export function isValidBirth(elem, msg){
+  let result = false
   let userDate = new Date(elem.value)
+  objForm.validator.birthDate = result
   if(isNaN(userDate.getTime())){
     // la date n'est pas conforme (ex 30/02/2020, ...)
     //console.log("--Debug date non conforme => "+userDate)
     setErrMsg(elem, msg.errBirth)
-    return false
-  }
-  // la date est conforme, on vérifie la majorité
-  let age = null
-  let now = new Date() // Date du jour
-  let diffyear = now.getYear() - userDate.getYear() // on fait la différence entre les deux timestamp
-  let diffMonth = now.getMonth() - userDate.getMonth() // on fait la différence entre le mois de naissance et le mois actuel pour ajuster l'age
-  if(diffMonth < 0||(diffMonth === 0 && now.getDate() < userDate.getDate())){ // il y a un décalage avec les mois ou les jours (bonne annee mais majo pas atteinte)
-    diffyear-- // on enleve donc un an pour ajuster
-    //console.log("--Debug -1 an => "+diffyear)
-  }
-  if(diffyear < 18){
-    // utilisateur mineur : refus
-    //console.log("--Debug est mineur => "+diffyear)
-    setErrMsg(elem, msg.errBirthYoung)
-    return false
-  }
+    return result
+  }else{
+    // la date est conforme, on vérifie la majorité
+    let now = new Date() // Date du jour
+    let diffyear = now.getYear() - userDate.getYear() // on fait la différence entre les deux timestamp
+    let diffMonth = now.getMonth() - userDate.getMonth() // on fait la différence entre le mois de naissance et le mois actuel pour ajuster l'age
+    if(diffMonth < 0||(diffMonth === 0 && now.getDate() < userDate.getDate())){ // il y a un décalage avec les mois ou les jours (bonne annee mais majo pas atteinte)
+      diffyear-- // on enleve donc un an pour ajuster
+      //console.log("--Debug -1 an => "+diffyear)
+    }
+    if(diffyear < 18){
+      // utilisateur mineur : refus
+      //console.log("--Debug est mineur => "+diffyear)
+      setErrMsg(elem, msg.errBirthYoung)
+      return result
+    }
+  }  
   //utilisateur majeur
   //console.log("--Debug date All good => "+diffyear)
   rmErrMsg(elem)
-  return true
+  result = true
+  objForm.validator.birthDate = result
+  return result
 }
+
 
 /**
  * isCitiesCheck()
@@ -138,14 +181,18 @@ export function isValidBirth(elem, msg){
  * @return {boolean} => true, la valeur du champ correspond a la demande - false, la valeur du champ ne correspond pas a la demande
  */
 export function isCitiesCheck(elem, msg, inputs){
+  let result = null
   let oneChecked = Array.from(inputs).some((radioElem) => radioElem.checked) // on duplique le tableau cities, puis on vérifie si au moins un elem a l'attribut checked
   if(!oneChecked){
-    setErrMsg(elem,msg)
-    return false
+    setErrMsg(elem,msg)    
+    result = false
+  }else{
+    rmErrMsg(elem)
+    result = true
   }
-  //console.log("--Debug isCitiesCheck() - TRUE oneChecked => "+oneChecked)
-  rmErrMsg(elem)
-  return true
+  //console.log("--Debug isCitiesCheck() - TRUE oneChecked => "+oneChecked)  
+  objForm.validator.city = result
+  return result
 }
 
 /**
@@ -162,10 +209,12 @@ export function getCheckedRadioValue(elem,msg){
   for (var i = 0; i < elem.length; i++) {
     if (elem[i].checked) {
       result = elem[i].value
+      objForm.validator.city = true
       return result
     }
   }
   setErrMsg(radioBox,msg)
+  objForm.validator.city = false
   return result
 }
 
@@ -177,11 +226,14 @@ export function getCheckedRadioValue(elem,msg){
  * @returns {boolean} => true = case coche, false = case non coche
  */
 export function isValidCgu(elem, msg){
+  let result = null
   if(!elem.checked){
     setErrMsg(elem, msg)
-    return false
+    result = false
+  }else{
+    rmErrMsg(elem)
+    result = true
   }
-  rmErrMsg(elem)
-  return true
+  objForm.validator.cgu = result
+  return result
 }
-
