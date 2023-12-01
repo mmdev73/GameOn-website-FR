@@ -19,7 +19,7 @@ export let tmOut
 // DOM Elements
 //---------------------------------------------------------------------
     // btn
-const modalBtn = document.querySelectorAll(".modal-btn");
+const modalBtn = document.querySelectorAll(".modal-btn")
 const modalBtnClose = document.querySelector(".close")
 const btnSubmit = document.querySelector(".btn-submit")
     //input
@@ -51,7 +51,7 @@ const rgxQty = /^[0-9]{1,2}$/ // Quantite
 document.getElementById("burger").addEventListener("click", editNav)
 
 // launch and close modal event
-modalBtn.forEach((btn) => btn.addEventListener("click", launchModal));
+modalBtn.forEach((btn) => btn.addEventListener("click", launchModal))
 modalBtnClose.addEventListener("click", closeModal)
 
 //---------------------------------------------------------------------
@@ -81,10 +81,7 @@ function validate(){
     getCheckedRadioValue(inputRadio,objMsg.errCities)
     isValidCgu(inputCgu, objMsg.errCgu)
 
-    if(objForm.isValid()){
-      return true
-    }
-    return false
+    return objForm.isValid()
 }
 
 
@@ -107,7 +104,7 @@ btnSubmit.addEventListener("click",(e)=>{
         objForm.values.cgu = inputCgu.checked
         objForm.values.news = inputNews.checked
 
-        console.log(objForm)
+        console.log(objForm.allValues)
         // on affiche l'information au client sur la validation du formulaire
         
         let modalH = modalBody.offsetHeight        
