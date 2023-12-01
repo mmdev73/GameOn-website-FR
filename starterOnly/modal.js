@@ -74,7 +74,7 @@ inputCgu.addEventListener("change", () => isValidCgu(inputCgu, objMsg.errCgu))
  */
 function validate(){
     isValidInput(inputFirst, objMsg.errName, rgxName)
-    isValidInput(inputLast, objMsg.errName, rgxName)
+    isValidInput(inputLast, objMsg.errNameLast, rgxName)
     isValidInput(inputEmail, objMsg.errEmail, rgxEmail)
     isValidBirth(inputBirth, objMsg)
     isValidInput(inputQuantity, objMsg.errQty, rgxQty)
