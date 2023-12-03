@@ -107,9 +107,9 @@ btnSubmit.addEventListener("click",(e)=>{
         console.log(objForm.allValues)
         // on affiche l'information au client sur la validation du formulaire
         
-        let modalH = modalBody.offsetHeight        
-        modalBody.setAttribute("style", "height:"+modalH+"px")
-        formElem.style.display = 'none'
+        let modalH = modalBody.offsetHeight        // récupération de la hauteur de la modal
+        modalBody.setAttribute("style", "height:"+modalH+"px") // on force dynamiquement la hauteur pour éviter un changement visible
+        formElem.style.display = 'none' // on cache le formulaire
 
         let validMsgBox = document.createElement("div")
         let valideMsgElem = document.createElement("p")

@@ -58,6 +58,9 @@ class Validation {
     }
 }
 
+/**
+ * Class contenant les messages d'erreurs
+ */
 class ErrorMsg {
     constructor(){
         this.errName = "Prénom : entre 2 et 31 caractères. Lettres (avec accents) et trait d'union sont acceptés"
@@ -71,5 +74,8 @@ class ErrorMsg {
     }
 }
 
+/**
+ * instanciation des objets
+ */
 export var objForm = new Validation() // instenciation de l'objet pour les champs de formulaire
 export var objMsg = new ErrorMsg() // instenciation de l'objet contenant les messages derreurs
